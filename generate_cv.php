@@ -2,7 +2,7 @@
 // Ce fichier gère l'upload de la photo et génère le CV en PDF à l'aide de FPDF.
 // Assurez-vous que fpdf.php est dans le même dossier.
 
-require('fpdf.php'); // Inclusion de la bibliothèque FPDF
+require('fpdf/fpdf.php'); // Inclusion de la bibliothèque FPDF
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
     // Récupération des données
