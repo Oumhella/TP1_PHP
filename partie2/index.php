@@ -1,44 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire étudiant</title>
+</head>
 <body>
+<h1>Formulaire étudiant</h1>
 
 <form action="index.php" method="post" enctype="multipart/form-data">
-  Select image to upload:
-  <input type="file" name="fileToUpload" id="fileToUpload">
-  <input type="submit" value="Upload Image" name="submit">
-</form>
 
+    <!-- Renseignements personnels -->
+    <fieldset>
+        <legend>Renseignements personnels</legend>
+        Nom: <input type="text" name="nom" required><br>
+        Prénom: <input type="text" name="prenom" required><br>
+        Âge: <input type="number" name="age" required><br>
+        Téléphone: <input type="tel" name="numero" required><br>
+        Email: <input type="email" name="email" required><br>
+        Photo: <input type="file" name="fileToUpload" id="fileToUpload"><br>
+    </fieldset>
+
+    <!-- Compétences et intérêts -->
+    <fieldset>
+      <legend>Formations et Stages</legend>
+      Formations:<br><textarea name="formations"></textarea><br>
+      Stages:<br><textarea name="stages"></textarea><br>
+    </fieldset>
+    <fieldset>
+      <legend>Competences et intérêts</legend>
+      Competences:<br><textarea name="competences"></textarea><br>
+      Centres d'intérêts:<br><textarea name="centres_interets"></textarea><br>
+      Langues:<br><textarea name="langues"></textarea><br>
+
+    </fieldset>
+
+    <input type="submit" name="submit" value="Envoyer">
+</form>
 </body>
 </html>
+
 <?php
 
 use Dompdf\Dompdf;
 
 require 'vendor/autoload.php';
 
+
 if (isset($_POST["submit"])) {
-  $nom = "Lyamani";
-  $prenom = "Ismail";
-  $age = 21;
-  $numero = "0612345678";
-  $email = "ismail@gmail.com";
-  $stages = "Stage de développement web chez XYZ";
-  $formations = "ENSA Tétouan - Génie Informatique";
-  $competences = "PHP, Java, C, Laravel, Angular";
-  $langues = "Arabe, Français, Anglais";
-  $centres_interets = "Lecture, Jeux vidéo, Voyage";
+  $nom       = $_POST['nom'] ?? "";
+  $prenom    = $_POST['prenom'] ?? "";
+  $age       = $_POST['age'] ?? "";
+  $numero = $_POST['numero'] ?? "";
+  $email     = $_POST['email'] ?? "";
+  $centres_interets  = $_POST['centres_interets'] ?? "";
+  $langues   = $_POST['langues'] ?? "";
+  $stages = $_POST['stages'] ?? "";
+  $formations = $_POST['formations'] ?? "";
+  $competences = $_POST['competences'] ?? "";
+
   // Read the uploaded file into a variable
   $imageData = file_get_contents($_FILES["fileToUpload"]["tmp_name"]);
 
-  // Now $imageData contains the binary content of the image
-  echo "Image has been stored in a variable.<br>";
-
-  // Example: show its size
-  echo "Image size: " . strlen($imageData) . " bytes<br>";
-
-  // If you want to display it directly in HTML
   $base64 = base64_encode($imageData);
-  echo '<img src="data:image/jpeg;base64,' . $base64 . '" width="200">';
 
   // instantiate and use the dompdf class
   $dompdf = new Dompdf();
