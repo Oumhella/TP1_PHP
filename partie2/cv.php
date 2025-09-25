@@ -28,7 +28,7 @@
             border-left: 4px solid #333;
         }
         .section {
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             padding: 8px 4px 0 4px;
         }
         .section p { margin: 10px 10px 14px 14px; line-height: 1.4; }
