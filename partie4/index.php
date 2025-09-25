@@ -5,37 +5,39 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-    $apiKey = getenv('API_KEY');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-function envoyerMail ($email){
+function envoyerMail ($email,$resultat,$nom,$prenom){
 
+    $temp=
 
-    global $apiKey;
     $mail = new PHPMailer(true);
-        $corps="votre candidature est accepte";
-        $sujet="candidature stage";
-        try {
-            //Server settings
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.sendgrid.net';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->SMTPSecure = 'tls';
-            $mail->Username   = 'apikey';                     //SMTP username
-            $mail->Password   = $apiKey;                            //SMTP password
-            $mail->Port       = 587;
-            $mail->From = "aoumhella98@gmail.com";
-            $mail->FromName = 'candidature';
-            $mail->addReplyTo("aoumhella98@gmail.com");
-            $mail->addAddress($email);
-            $mail->Body    = $corps;
-            $mail->Subject = $sujet;
-            $mail->send();
-            echo "email sent To {$email} with success<br>";
-        } catch(Exception $e){
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        $sujet="Reponse a votre candidature de stage - Entreprise";
+        if ($resultat == true){ //si le cv est accepté resultat = true
+            $corps="Bonjour {$prenom} {$nom},\n\nAprès consultation de votre candidature et de votre CV, nous avons le plaisir de vous informer que votre profil a été retenu pour un stage au sein de notre organisation.\nNous reviendrons vers vous prochainement pour vous communiquer les détails pratiques concernant le déroulement du stage.\n\nCordialement,\nL'équipe Recrutement";
+        } else { //si le cv n'est accepté resultat = false
+            $corps ="Bonjour {$prenom} {$nom},\n\nAprès consultation de votre candidature et de votre CV, nous regrettons de vous informer que votre profil n'a pas été retenu pour le stage proposé.\nNous vous remercions pour l'intérêt porté à notre organisation et vous souhaitons beaucoup de succès dans vos recherches futures.\n\nCordialement,\nL'équipe Recrutement";
         }
+            try {
+                //Server settings
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = $_ENV["HOST"];                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->SMTPSecure = 'tls';   
+                $mail->Username   = $_ENV["USERNAME"];                     //SMTP username
+                $mail->Password   = $_ENV["API_KEY"];                              //SMTP password
+                $mail->Port       = $_ENV["PORT"];
+                $mail->From       = $_ENV["FROM"]; 
+                $mail->FromName   = $_ENV["FROM_NAME"];
+                $mail->addReplyTo($_ENV["REPLY_TO"]); //l'adresse à répondre
+                $mail->addAddress($email);
+                $mail->Body    = $corps;
+                $mail->Subject = $sujet;
+                $mail->send();
+            } catch(Exception $e){
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
 
 
 }
@@ -45,11 +47,18 @@ $conn = new PDO('mysql:host=localhost; dbname=tp1_php; charset=utf8', 'root', ''
 
 if (isset($_POST['action']) && isset($_POST['email'])) {
     $email = $_POST['email'];
+    $stmt = $conn->prepare('SELECT * FROM etudiants WHERE email = ?');
+    $stmt->execute([$email]);
+    $candidat = $stmt->fetch();
+
+    $nom = $candidat['nom'];
+    $prenom = $candidat['prenom'];
 
     if ($_POST['action'] === 'valider') {
-        envoyerMail($email);
+        envoyerMail($email,true,$nom,$prenom);
         $message = "Candidature validée avec succès!";
     } elseif ($_POST['action'] === 'supprimer') {
+        envoyerMail($email,false,$nom,$prenom);
         $stmt = $conn->prepare('DELETE FROM etudiants WHERE email = ?');
         $stmt->execute([$email]);
         $message = "Candidature supprimée avec succès!";

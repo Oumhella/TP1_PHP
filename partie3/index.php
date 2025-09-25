@@ -66,13 +66,7 @@ if (isset($_POST["submit"])) {
 
 
 
-try {
-    $conn = new PDO('mysql:host=localhost; dbname=tp1_php; charset=utf8', 'root', '');
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die('Erreur : ' . $e->getMessage());
-}
+  $conn = new PDO('mysql:host=localhost; dbname=tp1_php; charset=utf8', 'root', '');
 
 
     $data =$conn->prepare('INSERT INTO etudiants(email,nom,prenom,age,telephone,formations,competences,stages,interets,langues,photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
