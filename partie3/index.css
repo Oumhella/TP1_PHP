@@ -1,0 +1,30 @@
+/* Simple, clean styles for the CV form */
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #f6f7fb; color: #222; margin: 0; }
+.container { max-width: 800px; margin: 32px auto; padding: 0 16px; }
+h1 { text-align: center; margin: 12px 0 20px; font-size: 24px; }
+form { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
+fieldset { border: 1px solid #e5e7eb; margin: 16px 0; padding: 12px 14px 16px; border-radius: 8px; }
+legend { padding: 0 6px; font-weight: bold; color: #333; }
+label { display: block; margin: 8px 0 4px; font-size: 14px; color: #333; }
+input[type="text"], input[type="number"], input[type="tel"], input[type="email"], textarea, input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+}
+textarea { min-height: 90px; resize: vertical; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.actions { text-align: center; margin-top: 12px; }
+input[type="submit"] {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+input[type="submit"]:hover { background: #1e40af; }
