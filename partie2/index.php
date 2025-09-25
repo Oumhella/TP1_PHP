@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulaire étudiant</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
+<div class="container">
 <h1>Formulaire étudiant</h1>
 
 <form action="index.php" method="post" enctype="multipart/form-data">
@@ -12,30 +14,57 @@
     <!-- Renseignements personnels -->
     <fieldset>
         <legend>Renseignements personnels</legend>
-        Nom: <input type="text" name="nom" required><br>
-        Prénom: <input type="text" name="prenom" required><br>
-        Âge: <input type="number" name="age" required><br>
-        Téléphone: <input type="tel" name="numero" required><br>
-        Email: <input type="email" name="email" required><br>
-        Photo: <input type="file" name="fileToUpload" id="fileToUpload"><br>
+        <div class="row">
+            <div>
+                <label>Nom</label>
+                <input type="text" name="nom" required>
+            </div>
+            <div>
+                <label>Prénom</label>
+                <input type="text" name="prenom" required>
+            </div>
+            <div>
+                <label>Âge</label>
+                <input type="number" name="age" required>
+            </div>
+            <div>
+                <label>Téléphone</label>
+                <input type="tel" name="numero" required>
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div>
+                <label>Photo</label>
+                <input type="file" name="fileToUpload" id="fileToUpload">
+            </div>
+        </div>
     </fieldset>
 
     <!-- Compétences et intérêts -->
     <fieldset>
       <legend>Formations et Stages</legend>
-      Formations:<br><textarea name="formations"></textarea><br>
-      Stages:<br><textarea name="stages"></textarea><br>
+      <label>Formations</label>
+      <textarea name="formations"></textarea>
+      <label>Stages</label>
+      <textarea name="stages"></textarea>
     </fieldset>
     <fieldset>
-      <legend>Competences et intérêts</legend>
-      Competences:<br><textarea name="competences"></textarea><br>
-      Centres d'intérêts:<br><textarea name="centres_interets"></textarea><br>
-      Langues:<br><textarea name="langues"></textarea><br>
-
+      <legend>Compétences et intérêts</legend>
+      <label>Compétences (séparées par des virgules)</label>
+      <textarea name="competences" placeholder="Ex: PHP, JavaScript, SQL"></textarea>
+      <label>Langues (séparées par des virgules)</label>
+      <textarea name="langues" placeholder="Ex: Français, Anglais, Espagnol"></textarea>
+      <label>Centres d'intérêts (séparés par des virgules)</label>
+      <textarea name="centres_interets" placeholder="Ex: Lecture, Sport, Voyage"></textarea>
     </fieldset>
 
-    <input type="submit" name="submit" value="Envoyer">
+    <div class="actions">
+        <input type="submit" name="submit" value="Envoyer">
+    </div>
 </form>
+<div>
 </body>
 </html>
 
