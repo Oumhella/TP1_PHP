@@ -4,8 +4,8 @@ $nom = $prenom = $age = $telephone = $email = $filiere = $annee = "";
 $modules = [];
 $nbrP = $projets = $interets = $langues = $remarques = $file = "";
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form'])) {
+
+if (isset($_POST['form'])) {
     $nom       = $_POST['nom'] ?? "";
     $prenom    = $_POST['prenom'] ?? "";
     $age       = $_POST['age'] ?? "";
@@ -26,7 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form'])) {
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
         $file = basename($_FILES['file']['name']);
         move_uploaded_file($_FILES['file']['tmp_name'], $uploadDir . $file);
+    } else {
+        $file = $_POST['file'] ?? "";
     }
+
 
 
     if (isset($_POST['valider'])) {
@@ -101,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form'])) {
     <input type="hidden" name="interets" value="<?php echo $interets; ?>">
     <input type="hidden" name="langues" value="<?php echo $langues; ?>">
     <input type="hidden" name="remarque" value="<?php echo $remarques; ?>">
+    <input type="hidden" name="file" value="<?php echo $file; ?>">
     <input type="hidden" name="form" value="1">
 
     <button type="submit" name="valider">Valider</button>
@@ -123,5 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form'])) {
     <input type="hidden" name="interets" value="<?php echo $interets; ?>">
     <input type="hidden" name="langues" value="<?php echo $langues; ?>">
     <input type="hidden" name="remarque" value="<?php echo $remarques; ?>">
-    <input type="submit" value="Modifier">
+    <input type="hidden" name="file" value="<?php echo $file; ?>">
+    <input type="submit" name="modifier" value="Modifier">
 </form>

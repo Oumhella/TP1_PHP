@@ -1,12 +1,12 @@
 <?php
-// Initialize defaults
+
 $nom = $prenom = $age = $telephone = $email = "";
 $filiere = $annee = "";
 $modules = [];
 $nbrP = $projets = $interets = $langues = $remarques = "";
 $file = "";
 
-// Prefill values if coming from recap.php (Modifier)
+
 if (isset($_POST['modifier'])) {
     $nom       = $_POST['nom'] ?? "";
     $prenom    = $_POST['prenom'] ?? "";
@@ -21,7 +21,9 @@ if (isset($_POST['modifier'])) {
     $interets  = $_POST['interets'] ?? "";
     $langues   = $_POST['langues'] ?? "";
     $remarques = $_POST['remarque'] ?? "";
-    $file      = $_POST['file'] ?? "";
+    if (isset($_POST['file']) && $_POST['file'] !== "") {
+        $file = $_POST['file'];
+    }
 }
 ?>
 
@@ -80,7 +82,11 @@ if (isset($_POST['modifier'])) {
         <legend>Remarques et fichier</legend>
         <textarea name="remarque"><?= $remarques ?></textarea><br>
         Fichier: <input type="file" name="file"><br>
-        <?php if ($file) echo "Fichier précédent: $file"; ?>
+        <?php if (!empty($file)) : ?>
+            Fichier précédent: <a href="uploads/<?= $file ?>" target="_blank"><?= $file ?></a>
+            <input type="hidden" name="file" value="<?= $file ?>">
+        <?php endif; ?>
+
     </fieldset>
 
     <input type="submit" name="form" value="Envoyer">
