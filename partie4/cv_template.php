@@ -82,14 +82,21 @@
 
 <div class="action-buttons">
     <form method="post" action="?" style="display: inline;">
-        <input type="hidden" name="id" value="<?= $candidat['email'] ?>">
+        <input type="hidden" name="email" value="<?= $candidat['email'] ?>">
         <input type="hidden" name="action" value="valider">
         <button type="submit" class="btn btn-validate"
                 onclick="return confirm('Valider cette candidature?')">Valider</button>
     </form>
 
     <form method="post" action="?" style="display: inline;">
-        <input type="hidden" name="id" value="<?= $candidat['email'] ?>">
+        <input type="hidden" name="email" value="<?= $candidat['email'] ?>">
+        <input type="hidden" name="action" value="refuser">
+        <button type="submit" class="btn btn-warning"
+                onclick="return confirm('Êtes-vous sûr de vouloir refuser cette candidature?')">Refuser</button>
+    </form>
+
+    <form method="post" action="?" style="display: inline;">
+        <input type="hidden" name="email" value="<?= $candidat['email'] ?>">
         <input type="hidden" name="action" value="supprimer">
         <button type="submit" class="btn btn-delete"
                 onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature?')">Supprimer</button>

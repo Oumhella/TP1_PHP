@@ -43,6 +43,9 @@
 
 use Dompdf\Dompdf;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 require 'vendor/autoload.php';
 
 
@@ -66,11 +69,14 @@ if (isset($_POST["submit"])) {
 
 
 
-  $conn = new PDO('mysql:host=localhost; dbname=tp1_php; charset=utf8', 'root', '');
+$conn = new PDO(
+    "{$_ENV['DB_CONNECTION']}:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_DATABASE']};charset={$_ENV['DB_CHARSET']}",
+    $_ENV['DB_USERNAME'],
+    $_ENV['DB_PASSWORD']
+);
 
-
-    $data =$conn->prepare('INSERT INTO etudiants(email,nom,prenom,age,telephone,formations,competences,stages,interets,langues,photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
-    $data->execute(array($email,$nom,$prenom,$age,$numero,$formations,$competences,$stages,$centres_interets,$langues,$base64));
+    $data =$conn->prepare('INSERT INTO etudiants(email,nom,prenom,age,telephone,formations,competences,stages,interets,langues,photo,etat) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)');
+    $data->execute(array($email,$nom,$prenom,$age,$numero,$formations,$competences,$stages,$centres_interets,$langues,$base64,"En cours de traitement"));
 
 
 

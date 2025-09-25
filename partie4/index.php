@@ -43,7 +43,11 @@ function envoyerMail ($email,$resultat,$nom,$prenom){
 }
 
 
-$conn = new PDO('mysql:host=localhost; dbname=tp1_php; charset=utf8', 'root', '');
+$conn = new PDO(
+    "{$_ENV['DB_CONNECTION']}:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_DATABASE']};charset={$_ENV['DB_CHARSET']}",
+    $_ENV['DB_USERNAME'],
+    $_ENV['DB_PASSWORD']
+);
 
 if (isset($_POST['action']) && isset($_POST['email'])) {
     $email = $_POST['email'];
@@ -57,11 +61,18 @@ if (isset($_POST['action']) && isset($_POST['email'])) {
     if ($_POST['action'] === 'valider') {
         envoyerMail($email,true,$nom,$prenom);
         $message = "Candidature validée avec succès!";
+        $data = $conn->prepare('UPDATE etudiants SET etat=? WHERE email=?;');
+        $data->execute(["Accépté",$email]);
+    } elseif ($_POST['action'] === 'refuser') {
+        envoyerMail($email,false,$nom,$prenom);
+        $data = $conn->prepare('UPDATE etudiants SET etat=? WHERE email=?;');
+        $data->execute(["Refusé",$email]);
+        $message = "Candidature Refusé!";
     } elseif ($_POST['action'] === 'supprimer') {
         envoyerMail($email,false,$nom,$prenom);
-        $stmt = $conn->prepare('DELETE FROM etudiants WHERE email = ?');
-        $stmt->execute([$email]);
-        $message = "Candidature supprimée avec succès!";
+        $data = $conn->prepare('DELETE FROM etudiants WHERE email=?;');
+        $data->execute([$email]);
+        $message = "Candidature Supprimé avec succées!";
     }
 }
 
@@ -82,6 +93,8 @@ if (isset($_GET['voir_cv'])) {
         $competences = htmlspecialchars($candidat['competences']);
         $langues = htmlspecialchars($candidat['langues']);
         $centres_interets = htmlspecialchars($candidat['interets']);
+        $etat = htmlspecialchars($candidat['etat']);
+        
 
         $base64 = '';
         if (!empty($candidat['photo'])) {
@@ -97,7 +110,7 @@ if (isset($_GET['voir_cv'])) {
     }
 }
 
-$data = $conn->prepare('SELECT * FROM etudiants ORDER BY email');
+$data = $conn->prepare("SELECT * FROM etudiants ORDER BY FIELD(etat, 'En cours de traitment','Accépté','Refusé');");
 $data->execute();
 $result = $data->fetchAll();
 ?>
@@ -128,6 +141,7 @@ $result = $data->fetchAll();
                 <th>Email</th>
                 <th>Téléphone</th>
                 <th>Âge</th>
+                <th>Etat</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -146,6 +160,7 @@ $result = $data->fetchAll();
                     <td><?= htmlspecialchars($row['email']) ?></td>
                     <td><?= htmlspecialchars($row['telephone']) ?></td>
                     <td><?= htmlspecialchars($row['age']) ?></td>
+                    <td><?= htmlspecialchars($row['etat']) ?></td>
                     <td class="actions">
                         <a href="?voir_cv=<?= urlencode($row['email']) ?>" class="btn btn-view">Voir CV</a>
 
@@ -154,6 +169,13 @@ $result = $data->fetchAll();
                             <input type="hidden" name="action" value="valider">
                             <button type="submit" class="btn btn-validate"
                                     onclick="return confirm('Valider cette candidature?')">Valider</button>
+                        </form>
+
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="email" value="<?= htmlspecialchars($row['email']) ?>">
+                            <input type="hidden" name="action" value="refuser">
+                            <button type="submit" class="btn btn-warning"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir refuser cette candidature?')">Refuser</button>
                         </form>
 
                         <form method="post" style="display: inline;">
